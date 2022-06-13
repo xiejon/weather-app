@@ -1,16 +1,16 @@
-const Weather = () => {
+const WeatherObj = () => {
     let celsius = false;
     return {
         celsius,
 
         async getUserLocation() {
-            const successCallback = position => position;
-            const errorCallback = error => error;
+            const success = position => position;
+            const error = error => error;
             let promise = new Promise((resolve, reject) => {
-                window.navigator.geolocation.getCurrentPosition(position => {
-                    resolve(successCallback(position));
-                }, error => {
-                    reject(errorCallback(error));
+                window.navigator.geolocation.getCurrentPosition(pos => {
+                    resolve(success(pos));
+                }, err => {
+                    reject(error(err));
                 });
             });
 
@@ -22,10 +22,8 @@ const Weather = () => {
             return raw.json();
         },
 
-        async fetchWeather(city) {
-            const loc = await this.fetchLocation(city);
-
-            const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${loc[0].lat}&lon=${loc[0].lon}&appid=bb9a4a8b3762bb47a3b7ff329d10b88f`, {mode: 'cors'});
+        async fetchWeather(lat, lon) {
+            const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=bb9a4a8b3762bb47a3b7ff329d10b88f`, {mode: 'cors'});
             return data.json();
         },
 
@@ -37,15 +35,26 @@ const Weather = () => {
                 return Math.round((9/5) * (kelvin - 273.15) + 32);
             }
         }
-
     }
 }
 
-const newWidget = Weather();
+async function getWeather() {
+    const newWidget = WeatherObj();
 
-newWidget.getUserLocation()
-            .then(position => console.log(position))
-            .catch((err) => console.log(err))
+    const loc = await newWidget.fetchLocation('downingtown, usa');
+    const weather = await newWidget.fetchWeather(loc[0].lat, loc[0].lon);
+    console.log(newWidget.convertTemp(weather.main.temp));
 
-newWidget.fetchWeather('downingtown, usa')
-            .then(item => console.log(newWidget.convertTemp(item.main.temp)));
+}
+getWeather();
+
+// async function getWeather() {
+//     const newWidget = WeatherObj();
+
+//     const loc = await newWidget.fetchLocation('downingtown, usa');
+//     const weather = await newWidget.fetchWeather(loc[0].lat, loc[0].lon);
+//     console.log(newWidget.convertTemp(weather.main.temp));
+
+// }
+
+// getWeather();
