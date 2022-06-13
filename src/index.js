@@ -55,20 +55,19 @@ async function setUI(data) {
     const locDate = document.querySelector('.local-date')
     const locTime = document.querySelector('.local-time')
     const mainTemp = document.querySelector('.main-temp')
+    const feelsLike = document.querySelector('.feels-like')
+    const wind = document.querySelector('.wind')
+    const humid = document.querySelector('.humidity')
 
-    // temperatures
-    const minTemp = WeatherObj().convertTemp(data.main.temp_min);
-    const maxTemp = WeatherObj().convertTemp(data.main.temp_max);
-    const feelsLike = WeatherObj().convertTemp(data.main.feels_like);
-    // wind
-    const windSpeed  = data.wind.speed;
-
-    const humidity = data.main.humidity;
-
-    mainTemp.textContent = `°${WeatherObj().convertTemp(data.main.temp)}`;
+    weatherDesc.textContent = data.weather[0].description;
+    city.textContent = data.name;
     locDate.textContent = WeatherObj().convertDate(data).substring(0, 17);
     locTime.textContent = WeatherObj().convertDate(data).substr(17, 5);
-    
+    mainTemp.textContent = `°${WeatherObj().convertTemp(data.main.temp)}`;
+
+    feelsLike.textContent = WeatherObj().convertTemp(data.main.feels_like);
+    wind.textContent = data.wind.speed;
+    humid.textContent = data.main.humidity;
 }
 
 // Get temp at user location
@@ -96,4 +95,4 @@ async function getWeather(city) {
     console.log(weather)
 }
 
-getWeather('philadelphia');
+getWeather('kagoshima');
