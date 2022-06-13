@@ -1,5 +1,19 @@
 import './styles.css';
-import DrizzleImg from './images/day/drizzle.jpg'
+import DrizzleImg from './images/day/drizzle.jpg';
+import RainImg from './images/day/rain.jpg'
+import ThunderImg from './images/day/thunderstorm.jpg'
+import ClearskyImg from './images/day/clear-sky.jpg';
+import FewCloudsImg from './images/day/few-clouds.jpg';
+import ScatterCloudsImg from './images/day/scattered-clouds.jpg';
+import BrokenCloudsImg from './images/day/broken-clouds.jpg';
+import OvercastImg from './images/day/overcast.jpg';
+import SnowImg from './images/day/snow.jpg'
+import NightClearskyImg from './images/night/night-clear-sky.jpg';
+import NightCloudsImg from './images/night/night-clouds.jpg';
+import NightRainImg from './images/night/night-rain.jpg';
+import NightThunderImg from './images/night/night-thunderstorm.jpg';
+import NightSnowImg from './images/night/night-snow.jpg';
+
 
 const WeatherObj = () => {
     let celsius = false;
@@ -79,7 +93,7 @@ const UI = () => {
             }
 
             // test
-            const weatherId = data.weather[0].id.toString();
+            const weatherId = data.weather[0].id;
             this.createBgImage();
             this.setBackground(weatherId)
         }, 
@@ -98,12 +112,25 @@ const UI = () => {
 
             console.log(img)
         },
-        setBackground(weatherId) {
-            switch(weatherId[0]) {
-                case '5': 
-                this.setBgImage(DrizzleImg)
-                break;
-                default: 
+        setBackground(id) {
+            // Default background
+            this.setBgImage(NightClearskyImg)
+            if (this.nightMode) {
+                if (id >= 200 && id <= 232) this.setBgImage(NightThunderImg);
+                if (id >= 300 && id <= 531) this.setBgImage(NightRainImg);
+                if (id >= 600 && id <= 622) this.setBgImage(NightSnowImg);
+                if (id === 800) this.setBgImage(NightClearskyImg);
+                if (id >= 801 && id <= 804) this.setBgImage(NightCloudsImg);
+            } else {
+                if (id >= 200 && id <= 232) this.setBgImage(ThunderImg);
+                if (id >= 300 && id <= 321) this.setBgImage(DrizzleImg);
+                if (id >= 500 && id <= 531) this.setBgImage(RainImg);
+                if (id >= 600 && id <= 622) this.setBgImage(SnowImg);
+                if (id === 800) this.setBgImage(ClearskyImg);
+                if (id === 801) this.setBgImage(FewCloudsImg);
+                if (id === 802) this.setBgImage(ScatterCloudsImg);
+                if (id === 803) this.setBgImage(BrokenCloudsImg);
+                if (id === 804) this.setBgImage(OvercastImg);
             }
         }
     }
@@ -135,4 +162,4 @@ async function getWeather(city) {
     console.log(weather)
 }
 
-getWeather('kagoshima');
+getWeather('los angeles');
