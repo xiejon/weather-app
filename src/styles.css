@@ -1,0 +1,13 @@
+.main, 
+.extra {
+    width: 100px;
+    background-color: white;
+}
+
+.background {
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
