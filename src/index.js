@@ -1,7 +1,21 @@
 const Weather = () => {
-    let celcius = false;
+    let celsius = false;
     return {
-        celcius,
+        celsius,
+
+        async getUserLocation() {
+            const successCallback = position => position;
+            const errorCallback = error => error;
+            let promise = new Promise((resolve, reject) => {
+                window.navigator.geolocation.getCurrentPosition(position => {
+                    resolve(successCallback(position));
+                }, error => {
+                    reject(errorCallback(error));
+                });
+            });
+
+            return await promise;
+        },
 
         async fetchLocation(city) {
             const raw = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=bb9a4a8b3762bb47a3b7ff329d10b88f`, {mode: 'cors'});
@@ -17,7 +31,7 @@ const Weather = () => {
 
         convertTemp(kelvin) {
             // Kelvin -> Celcius/Fahrenheit rounded to nearest integer
-            if (celcius) {
+            if (celsius) {
                 return Math.round(kelvin - 273.15);
             } else {
                 return Math.round((9/5) * (kelvin - 273.15) + 32);
@@ -28,5 +42,10 @@ const Weather = () => {
 }
 
 const newWidget = Weather();
-const weather = newWidget.fetchWeather('downingtown, usa');
-weather.then(item => console.log(newWidget.convertTemp(item.main.temp)))
+
+newWidget.getUserLocation()
+            .then(position => console.log(position))
+            .catch((err) => console.log(err))
+
+newWidget.fetchWeather('downingtown, usa')
+            .then(item => console.log(newWidget.convertTemp(item.main.temp)));
