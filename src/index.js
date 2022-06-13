@@ -6,6 +6,7 @@ const WeatherObj = () => {
         async getUserLocation() {
             const success = position => position;
             const error = error => error;
+
             let promise = new Promise((resolve, reject) => {
                 window.navigator.geolocation.getCurrentPosition(pos => {
                     resolve(success(pos));
@@ -34,27 +35,65 @@ const WeatherObj = () => {
             } else {
                 return Math.round((9/5) * (kelvin - 273.15) + 32);
             }
+        },
+
+        setCelsius() {
+            this.celsius ? this.celsius = false : this.celsius = true;
+        },
+
+        convertDate(data) {
+            const date = new Date((data.dt + data.timezone) * 1000);
+            // Remove user's local time-zone
+            return date.toUTCString();
         }
     }
 }
 
-async function getWeather() {
-    const newWidget = WeatherObj();
+async function setUI(data) { 
+    const weatherDesc = document.querySelector('.desc')
+    const city = document.querySelector('.city')
+    const locDate = document.querySelector('.local-date')
+    const locTime = document.querySelector('.local-time')
+    const mainTemp = document.querySelector('.main-temp')
 
-    const loc = await newWidget.fetchLocation('downingtown, usa');
-    const weather = await newWidget.fetchWeather(loc[0].lat, loc[0].lon);
-    console.log(newWidget.convertTemp(weather.main.temp));
+    // temperatures
+    const minTemp = WeatherObj().convertTemp(data.main.temp_min);
+    const maxTemp = WeatherObj().convertTemp(data.main.temp_max);
+    const feelsLike = WeatherObj().convertTemp(data.main.feels_like);
+    // wind
+    const windSpeed  = data.wind.speed;
 
+    const humidity = data.main.humidity;
+
+    mainTemp.textContent = `°${WeatherObj().convertTemp(data.main.temp)}`;
+    locDate.textContent = WeatherObj().convertDate(data).substring(0, 17);
+    locTime.textContent = WeatherObj().convertDate(data).substr(17, 5);
+    
 }
-getWeather();
 
-// async function getWeather() {
-//     const newWidget = WeatherObj();
+// Get temp at user location
+async function getWeather(city) {
+    const newWidget = WeatherObj();
+    let location;
+    let lat;
+    let lon;
 
-//     const loc = await newWidget.fetchLocation('downingtown, usa');
-//     const weather = await newWidget.fetchWeather(loc[0].lat, loc[0].lon);
-//     console.log(newWidget.convertTemp(weather.main.temp));
+    if (!city) {
+        // Default location
+        location = await newWidget.getUserLocation();
+        lat = location.coords.latitude;
+        lon = location.coords.longitude;
+    } else {
+        location = await newWidget.fetchLocation(city);
+        lat = location[0].lat;
+        lon = location[0].lon;
+    }
 
-// }
+    const weather = await newWidget.fetchWeather(lat, lon);
 
-// getWeather();
+    setUI(weather);
+
+    console.log(weather)
+}
+
+getWeather('philadelphia');
