@@ -27,9 +27,9 @@ import LightningSvg from "./icons/cloud-lightning.svg";
 import CloudSvg from "./icons/cloud.svg";
 
 const WeatherObj = () => {
-  let celsius = false;
+    let weatherData;
   return {
-    celsius,
+      weatherData,
     async getWeather(city) {
         let location;
         let latit;
@@ -45,8 +45,9 @@ const WeatherObj = () => {
           latit = location[0].lat;
           longit = location[0].lon;
         }
-      
-        return await WeatherObj().fetchWeather(latit, longit);
+        
+        this.weatherData = await WeatherObj().fetchWeather(latit, longit);
+        return this.weatherData;
     },
     async getUserLocation() {
       const success = (position) => position;
@@ -227,24 +228,24 @@ const UI = () => {
   };
 };
 
-async function searchListener(obj) {
+async function searchListener(obj, widget) {
     const search = document.querySelector('.search-div img')
     const input = document.querySelector('#search')
 
     const searchLoc = async() => { 
-        const data = await WeatherObj().getWeather(input.value)
+        const data = await widget.getWeather(input.value)
         obj.showWeather(data);
         input.value = '';
     }
     search.addEventListener('click', searchLoc);
 }
 
-function metricListener(obj, data) {
+function metricListener(obj, widget) {
     const btn = document.querySelector('.toggle-metric');
 
-    function setMetric() {
+    const setMetric = () => {
         obj.setMetric();
-        obj.showWeather(data);
+        obj.showWeather(widget.weatherData);
     }
 
     btn.addEventListener('click', setMetric);
@@ -258,8 +259,8 @@ async function runApp() {
     newUI.setFixedIcons();
     newUI.showWeather(weatherData);
 
-    metricListener(newUI, weatherData);
-    searchListener(newUI);
+    metricListener(newUI, widget);
+    searchListener(newUI, widget);
 }
 
 runApp();
