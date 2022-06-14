@@ -79,14 +79,6 @@ const WeatherObj = () => {
       );
       return data.json();
     },
-    convertTemp(kelvin) {
-      // Kelvin -> Celcius/Fahrenheit rounded to nearest integer
-      if (celsius) {
-        return Math.round(kelvin - 273.15);
-      } else {
-        return Math.round((9 / 5) * (kelvin - 273.15) + 32);
-      }
-    },
     convertDate(data) {
       const date = new Date((data.dt + data.timezone) * 1000);
       // Remove user's local time-zone
@@ -97,11 +89,16 @@ const WeatherObj = () => {
 
 const UI = () => {
   let nightMode = false;
-  let celsius = false;
+  let metric = false;
   return {
     nightMode,
-    celsius,
+    metric,
     showWeather(data) {
+
+    // Default background & icon
+    this.createDefaultBackground();
+    this.createDefaultSvg();
+
       const weatherDesc = document.querySelector(".desc");
       const city = document.querySelector(".city");
       const locDate = document.querySelector(".local-date");
@@ -117,9 +114,9 @@ const UI = () => {
       city.textContent = data.name;
       locDate.textContent = WeatherObj().convertDate(data).substring(0, 17);
       locTime.textContent = timestamp;
-      mainTemp.textContent = `°${WeatherObj().convertTemp(data.main.temp)}`;
-      feelsLike.textContent = `°${WeatherObj().convertTemp(data.main.feels_like)}`;
-      wind.textContent = `${data.wind.speed}`;
+      mainTemp.textContent = `°${this.convertTemp(data.main.temp)}`;
+      feelsLike.textContent = `°${this.convertTemp(data.main.feels_like)}`;
+      wind.textContent = this.getSpeed(data.wind.speed);
       humid.textContent = `${data.main.humidity}%`;
 
       // Change to night mode between 8pm and 7am
@@ -129,14 +126,27 @@ const UI = () => {
         this.nightMode = false;
       }
 
-      // tes
-
       const weatherId = data.weather[0].id;
       this.setImages(weatherId);
 
     },
-    setCelsius() {
-        this.celsius ? (this.celsius = false) : (this.celsius = true);
+    setMetric() {
+        this.metric ? (this.metric = false) : (this.metric = true);
+    },
+    convertTemp(kelvin) {
+      // Kelvin -> Celcius/Fahrenheit rounded to nearest integer
+      if (this.metric) {
+        return Math.round(kelvin - 273.15);
+      } else {
+        return Math.round((9 / 5) * (kelvin - 273.15) + 32);
+      }
+    },
+    getSpeed(speed) {
+        if (!this.metric) {
+            return `${Math.round(((speed * 2.236936) * 10) / 10)} m/h`;
+        } else {
+            return `${Math.round((speed * 10) / 10)} m/s`;
+        }
     },
     setFixedIcons() {
       const searchBox = document.querySelector('.search-div');
@@ -189,10 +199,6 @@ const UI = () => {
       link ? svg.setAttribute("src", link) : this.createDefaultSvg();
     },
     setImages(id) {
-
-        this.createDefaultBackground();
-        this.createDefaultSvg();
-
       if (this.nightMode) {
         if (id >= 200 && id <= 232)
           this.setBgImage(NightThunderImg), this.setIcon(LightningSvg);
@@ -224,20 +230,24 @@ const UI = () => {
 async function searchListener(obj) {
     const search = document.querySelector('.search-div img')
     const input = document.querySelector('#search')
-    const data = await WeatherObj().getWeather(input.value)
 
-    const searchLoc = () => { 
+    const searchLoc = async() => { 
+        const data = await WeatherObj().getWeather(input.value)
         obj.showWeather(data);
         input.value = '';
     }
-    
     search.addEventListener('click', searchLoc);
 }
 
-function metricListener(obj) {
+function metricListener(obj, data) {
     const btn = document.querySelector('.toggle-metric');
 
-    btn.addEventListener('click', () => obj.setCelsius());
+    function setMetric() {
+        obj.setMetric();
+        obj.showWeather(data);
+    }
+
+    btn.addEventListener('click', setMetric);
 }
 
 async function runApp() {
@@ -248,7 +258,7 @@ async function runApp() {
     newUI.setFixedIcons();
     newUI.showWeather(weatherData);
 
-    metricListener(newUI)
+    metricListener(newUI, weatherData);
     searchListener(newUI);
 }
 
