@@ -76,7 +76,7 @@ const WeatherObj = () => {
       const date = new Date((data.dt + data.timezone) * 1000);
       // Remove user's local time-zone
       return date.toUTCString();
-    },
+    }
   };
 };
 
@@ -112,30 +112,36 @@ const UI = () => {
         this.nightMode = false;
       }
 
-      // test
+      // tes
+
       const weatherId = data.weather[0].id;
       this.setImages(weatherId);
 
-      this.setSidebarIcons();
     },
-    setSidebarIcons() {
+    setFixedIcons() {
+      const searchBox = document.querySelector('.search-div');
       const box1 = document.querySelector(".extra .box:nth-child(1)");
       const box2 = document.querySelector(".extra .box:nth-child(2)");
       const box3 = document.querySelector(".extra .box:nth-child(3)");
 
+      const search = document.createElement('img')
       const feelsLike = document.createElement("img");
       const wind = document.createElement("img");
       const humid = document.createElement("img");
 
+      search.src = SearchSvg
       feelsLike.src = ThermSvg;
       wind.src = WindSvg;
       humid.src = HumidSvg;
 
+      searchBox.append(search)
       box1.append(feelsLike);
       box2.append(wind);
       box3.append(humid);
     },
     createDefaultBackground() {
+    if (document.querySelector('.background')) return;
+
       const container = document.querySelector(".container");
 
       const img = document.createElement("img");
@@ -144,6 +150,7 @@ const UI = () => {
       container.append(img);
     },
     createDefaultSvg() {
+    if (document.querySelector('.main-svg')) return;
       const div = document.querySelector(".svg-div");
 
       const svg = document.createElement("img");
@@ -162,9 +169,9 @@ const UI = () => {
       link ? svg.setAttribute("src", link) : this.createDefaultSvg();
     },
     setImages(id) {
-      // Default background & icon
-      this.createDefaultBackground();
-      this.createDefaultSvg();
+
+        this.createDefaultBackground();
+        this.createDefaultSvg();
 
       if (this.nightMode) {
         if (id >= 200 && id <= 232)
@@ -190,34 +197,46 @@ const UI = () => {
         if (id === 803) this.setBgImage(BrokenCloudsImg);
         if (id === 804) this.setBgImage(OvercastImg);
       }
-    },
+    }
   };
 };
 
 // Get temp at user location
-async function getWeather(city) {
+async function displayWeather(city) {
   const newWidget = WeatherObj();
   let location;
-  let lat;
-  let lon;
+  let latit;
+  let longit;
 
   if (!city) {
     // Default location
     location = await newWidget.getUserLocation();
-    lat = location.coords.latitude;
-    lon = location.coords.longitude;
+    latit = location.coords.latitude;
+    longit = location.coords.longitude;
   } else {
     location = await newWidget.fetchLocation(city);
-    lat = location[0].lat;
-    lon = location[0].lon;
+    latit = location[0].lat;
+    longit = location[0].lon;
   }
 
-  const weather = await newWidget.fetchWeather(lat, lon);
+  const weather = await newWidget.fetchWeather(latit, longit);
 
-  const newUI = UI();
-  newUI.showData(weather);
-
-  console.log(weather);
+  UI().showData(weather);
 }
 
-getWeather("london");
+function searchListener() {
+    const search = document.querySelector('.search-div img')
+    const input = document.querySelector('#search')
+
+    const searchLoc = () => { 
+        displayWeather(input.value)
+        input.value = '';
+    }
+    
+    search.addEventListener('click', searchLoc);
+}
+
+UI().setFixedIcons();
+
+displayWeather()
+    .then(searchListener)
