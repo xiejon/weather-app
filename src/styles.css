@@ -20,11 +20,21 @@
     font-family: Noto-Sans;
 }
 
+body {
+    height: 90vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    gap: 50px;
 }
 
 .main {
@@ -34,42 +44,67 @@
 }
 .desc {
     font-size: 90px;
+    font-weight: 600;
 }
 .city {
-    font-size: 60px;
+    font-size: 70px;
 }
 .local-date {
-    font-size: 25px;
+    padding-top: 10px;
+    font-size: 30px;
 }
 .local-time {
-    font-size: 25px;
+    padding-top: 8px;
+    font-size: 30px;
+    font-weight: 600;
 }
 .main-temp {
     font-size: 100px;
 }
 .main-svg {
-    height: 100px;
+    padding-bottom: 12px;
+    height: 120px;
 }
 .toggle-metric {
     font-size: 25px;
 }
 
 .search-div {
-    height: 40px;
+    height: 50px;
     display: flex;
     border-bottom: 2px solid white;
 }
 
+.search-div img {
+    height: 30px;
+    padding-bottom: 5px;
+    align-self: end;
+    justify-self: center;
+}
+
 #search {
-    padding: 16px 0px 16px 16px;
+    width: 180px;
+    padding: 16px 0px 5px 16px;
     background-color: transparent;
     border: none;
+    color: white;
+    font-size: 23px;
 }
 
 ::placeholder {
     color: white;
-    font-size: 16px;
+    font-size: 23px;
     font-weight: 600;
+}
+
+#search:focus {
+    outline: none;
+}
+
+.search-div img:hover,
+#search:hover, 
+.toggle-metric:hover {
+    cursor: pointer;
 }
 
 /* Side information */
@@ -106,7 +141,7 @@
 
 .main, 
 .extra {
-    border: 1px solid yellow;
+
 }
 
 .background {
