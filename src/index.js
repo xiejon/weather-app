@@ -27,27 +27,27 @@ import LightningSvg from "./icons/cloud-lightning.svg";
 import CloudSvg from "./icons/cloud.svg";
 
 const WeatherObj = () => {
-    let weatherData;
+  let weatherData;
   return {
-      weatherData,
+    weatherData,
     async getWeather(city) {
-        let location;
-        let latit;
-        let longit;
-      
-        if (!city) {
-          // Default location
-          location = await WeatherObj().getUserLocation();
-          latit = location.coords.latitude;
-          longit = location.coords.longitude;
-        } else {
-          location = await WeatherObj().fetchLocation(city);
-          latit = location[0].lat;
-          longit = location[0].lon;
-        }
-        
-        this.weatherData = await WeatherObj().fetchWeather(latit, longit);
-        return this.weatherData;
+      let location;
+      let latit;
+      let longit;
+
+      if (!city) {
+        // Default location
+        location = await WeatherObj().getUserLocation();
+        latit = location.coords.latitude;
+        longit = location.coords.longitude;
+      } else {
+        location = await WeatherObj().fetchLocation(city);
+        latit = location[0].lat;
+        longit = location[0].lon;
+      }
+
+      this.weatherData = await WeatherObj().fetchWeather(latit, longit);
+      return this.weatherData;
     },
     async getUserLocation() {
       const success = (position) => position;
@@ -84,7 +84,7 @@ const WeatherObj = () => {
       const date = new Date((data.dt + data.timezone) * 1000);
       // Remove user's local time-zone
       return date.toUTCString();
-    }
+    },
   };
 };
 
@@ -95,10 +95,9 @@ const UI = () => {
     nightMode,
     metric,
     showWeather(data) {
-
-    // Default background & icon
-    this.createDefaultBackground();
-    this.createDefaultSvg();
+      // Default background & icon
+      this.createDefaultBackground();
+      this.createDefaultSvg();
 
       const weatherDesc = document.querySelector(".desc");
       const city = document.querySelector(".city");
@@ -129,10 +128,9 @@ const UI = () => {
 
       const weatherId = data.weather[0].id;
       this.setImages(weatherId);
-
     },
     setMetric() {
-        this.metric ? (this.metric = false) : (this.metric = true);
+      this.metric ? (this.metric = false) : (this.metric = true);
     },
     convertTemp(kelvin) {
       // Kelvin -> Celcius/Fahrenheit rounded to nearest integer
@@ -143,35 +141,35 @@ const UI = () => {
       }
     },
     getSpeed(speed) {
-        if (!this.metric) {
-            return `${Math.round(((speed * 2.236936) * 10) / 10)} m/h`;
-        } else {
-            return `${Math.round((speed * 10) / 10)} m/s`;
-        }
+      if (!this.metric) {
+        return `${Math.round((speed * 2.236936 * 10) / 10)} m/h`;
+      } else {
+        return `${Math.round((speed * 10) / 10)} m/s`;
+      }
     },
     setFixedIcons() {
-      const searchBox = document.querySelector('.search-div');
+      const searchBox = document.querySelector(".search-div");
       const box1 = document.querySelector(".extra .box:nth-child(1)");
       const box2 = document.querySelector(".extra .box:nth-child(2)");
       const box3 = document.querySelector(".extra .box:nth-child(3)");
 
-      const search = document.createElement('img')
+      const search = document.createElement("img");
       const feelsLike = document.createElement("img");
       const wind = document.createElement("img");
       const humid = document.createElement("img");
 
-      search.src = SearchSvg
+      search.src = SearchSvg;
       feelsLike.src = ThermSvg;
       wind.src = WindSvg;
       humid.src = HumidSvg;
 
-      searchBox.append(search)
+      searchBox.append(search);
       box1.append(feelsLike);
       box2.append(wind);
       box3.append(humid);
     },
     createDefaultBackground() {
-    if (document.querySelector('.background')) return;
+      if (document.querySelector(".background")) return;
 
       const container = document.querySelector(".container");
 
@@ -181,7 +179,7 @@ const UI = () => {
       container.append(img);
     },
     createDefaultSvg() {
-    if (document.querySelector('.main-svg')) return;
+      if (document.querySelector(".main-svg")) return;
       const div = document.querySelector(".svg-div");
 
       const svg = document.createElement("img");
@@ -224,43 +222,43 @@ const UI = () => {
         if (id === 803) this.setBgImage(BrokenCloudsImg);
         if (id === 804) this.setBgImage(OvercastImg);
       }
-    }
+    },
   };
 };
 
 async function searchListener(obj, widget) {
-    const search = document.querySelector('.search-div img')
-    const input = document.querySelector('#search')
+  const search = document.querySelector(".search-div img");
+  const input = document.querySelector("#search");
 
-    const searchLoc = async() => { 
-        const data = await widget.getWeather(input.value)
-        obj.showWeather(data);
-        input.value = '';
-    }
-    search.addEventListener('click', searchLoc);
+  const searchLoc = async () => {
+    const data = await widget.getWeather(input.value);
+    obj.showWeather(data);
+    input.value = "";
+  };
+  search.addEventListener("click", searchLoc);
 }
 
 function metricListener(obj, widget) {
-    const btn = document.querySelector('.toggle-metric');
+  const btn = document.querySelector(".toggle-metric");
 
-    const setMetric = () => {
-        obj.setMetric();
-        obj.showWeather(widget.weatherData);
-    }
+  const setMetric = () => {
+    obj.setMetric();
+    obj.showWeather(widget.weatherData);
+  };
 
-    btn.addEventListener('click', setMetric);
+  btn.addEventListener("click", setMetric);
 }
 
 async function runApp() {
-    const widget = WeatherObj();
-    const weatherData = await widget.getWeather();
+  const widget = WeatherObj();
+  const weatherData = await widget.getWeather();
 
-    const newUI = UI();
-    newUI.setFixedIcons();
-    newUI.showWeather(weatherData);
+  const newUI = UI();
+  newUI.setFixedIcons();
+  newUI.showWeather(weatherData);
 
-    metricListener(newUI, widget);
-    searchListener(newUI, widget);
+  metricListener(newUI, widget);
+  searchListener(newUI, widget);
 }
 
 runApp();

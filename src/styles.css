@@ -1,154 +1,149 @@
 @font-face {
-    font-family: Noto-Sans;
-    src: url(./Noto_Sans/NotoSans-Regular.ttf);
-    font-weight: 500;
+  font-family: Noto-Sans;
+  src: url(./Noto_Sans/NotoSans-Regular.ttf);
+  font-weight: 500;
 }
 @font-face {
-    font-family: Noto-Sans;
-    src: url(./Noto_Sans/NotoSans-Medium.ttf);
-    font-weight: 600;
+  font-family: Noto-Sans;
+  src: url(./Noto_Sans/NotoSans-Medium.ttf);
+  font-weight: 600;
 }
 @font-face {
-    font-family: Noto-Sans;
-    src: url(./Noto_Sans/NotoSans-Bold.ttf);
-    font-weight: 700;
+  font-family: Noto-Sans;
+  src: url(./Noto_Sans/NotoSans-Bold.ttf);
+  font-weight: 700;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    font-family: Noto-Sans;
+  margin: 0;
+  padding: 0;
+  font-family: Noto-Sans;
 }
 
 body {
-    height: 90vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  height: 90vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    gap: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  gap: 50px;
 }
 
 .main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .desc {
-    font-size: 90px;
-    font-weight: 600;
+  font-size: 90px;
+  font-weight: 600;
 }
 .city {
-    font-size: 70px;
+  font-size: 70px;
 }
 .local-date {
-    padding-top: 10px;
-    font-size: 30px;
+  padding-top: 10px;
+  font-size: 30px;
 }
 .local-time {
-    padding-top: 8px;
-    font-size: 30px;
-    font-weight: 600;
+  padding-top: 8px;
+  font-size: 30px;
+  font-weight: 600;
 }
 .main-temp {
-    font-size: 100px;
+  font-size: 100px;
 }
 .main-svg {
-    padding-bottom: 12px;
-    height: 120px;
+  padding-bottom: 12px;
+  height: 120px;
 }
 .toggle-metric {
-    font-size: 25px;
+  font-size: 25px;
 }
 
 .search-div {
-    height: 50px;
-    display: flex;
-    border-bottom: 2px solid white;
+  height: 50px;
+  display: flex;
+  border-bottom: 2px solid white;
 }
 
 .search-div img {
-    height: 30px;
-    padding-bottom: 5px;
-    align-self: end;
-    justify-self: center;
+  height: 30px;
+  padding-bottom: 5px;
+  align-self: end;
+  justify-self: center;
 }
 
 #search {
-    width: 180px;
-    padding: 16px 0px 5px 16px;
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 23px;
+  width: 180px;
+  padding: 16px 0px 5px 16px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 23px;
 }
 
 ::placeholder {
-    color: white;
-    font-size: 23px;
-    font-weight: 600;
+  color: white;
+  font-size: 23px;
+  font-weight: 600;
 }
 
 #search:focus {
-    outline: none;
+  outline: none;
 }
 
 .search-div img:hover,
-#search:hover, 
+#search:hover,
 .toggle-metric:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Side information */
 .extra {
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
 .extra .box {
-    display: grid;
-    grid-template-columns: 140px 2fr;
-    grid-template-rows: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 140px 2fr;
+  grid-template-rows: 1fr 1fr;
 }
 
 .box img {
-    height: 90px;
-    grid-row: 1 / span 2;
-    align-self: center;
-    justify-self: center;
+  height: 90px;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: center;
 }
 
 .box h3 {
-    grid-column: 2;
-    font-size: 30px;
-    font-weight: 700;
+  grid-column: 2;
+  font-size: 30px;
+  font-weight: 700;
 }
 .box p {
-    grid-column: 2;
-    grid-row: 2;
-    font-size: 40px;
-    font-weight: 600;
-}
-
-.main, 
-.extra {
-
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 40px;
+  font-weight: 600;
 }
 
 .background {
-    height: 100vh;
-    width: 100vw;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
