@@ -30,6 +30,24 @@ const WeatherObj = () => {
   let celsius = false;
   return {
     celsius,
+    async getWeather(city) {
+        let location;
+        let latit;
+        let longit;
+      
+        if (!city) {
+          // Default location
+          location = await WeatherObj().getUserLocation();
+          latit = location.coords.latitude;
+          longit = location.coords.longitude;
+        } else {
+          location = await WeatherObj().fetchLocation(city);
+          latit = location[0].lat;
+          longit = location[0].lon;
+        }
+      
+        return await WeatherObj().fetchWeather(latit, longit);
+    },
     async getUserLocation() {
       const success = (position) => position;
       const error = (error) => error;
@@ -69,9 +87,6 @@ const WeatherObj = () => {
         return Math.round((9 / 5) * (kelvin - 273.15) + 32);
       }
     },
-    setCelsius() {
-      this.celsius ? (this.celsius = false) : (this.celsius = true);
-    },
     convertDate(data) {
       const date = new Date((data.dt + data.timezone) * 1000);
       // Remove user's local time-zone
@@ -82,9 +97,11 @@ const WeatherObj = () => {
 
 const UI = () => {
   let nightMode = false;
+  let celsius = false;
   return {
     nightMode,
-    showData(data) {
+    celsius,
+    showWeather(data) {
       const weatherDesc = document.querySelector(".desc");
       const city = document.querySelector(".city");
       const locDate = document.querySelector(".local-date");
@@ -102,8 +119,8 @@ const UI = () => {
       locTime.textContent = timestamp;
       mainTemp.textContent = `°${WeatherObj().convertTemp(data.main.temp)}`;
       feelsLike.textContent = `°${WeatherObj().convertTemp(data.main.feels_like)}`;
-      wind.textContent = data.wind.speed;
-      humid.textContent = data.main.humidity;
+      wind.textContent = `${data.wind.speed}`;
+      humid.textContent = `${data.main.humidity}%`;
 
       // Change to night mode between 8pm and 7am
       if (parseInt(timestamp) < 7 || parseInt(timestamp) > 20) {
@@ -117,6 +134,9 @@ const UI = () => {
       const weatherId = data.weather[0].id;
       this.setImages(weatherId);
 
+    },
+    setCelsius() {
+        this.celsius ? (this.celsius = false) : (this.celsius = true);
     },
     setFixedIcons() {
       const searchBox = document.querySelector('.search-div');
@@ -201,42 +221,35 @@ const UI = () => {
   };
 };
 
-// Get temp at user location
-async function displayWeather(city) {
-  const newWidget = WeatherObj();
-  let location;
-  let latit;
-  let longit;
-
-  if (!city) {
-    // Default location
-    location = await newWidget.getUserLocation();
-    latit = location.coords.latitude;
-    longit = location.coords.longitude;
-  } else {
-    location = await newWidget.fetchLocation(city);
-    latit = location[0].lat;
-    longit = location[0].lon;
-  }
-
-  const weather = await newWidget.fetchWeather(latit, longit);
-
-  UI().showData(weather);
-}
-
-function searchListener() {
+async function searchListener(obj) {
     const search = document.querySelector('.search-div img')
     const input = document.querySelector('#search')
+    const data = await WeatherObj().getWeather(input.value)
 
     const searchLoc = () => { 
-        displayWeather(input.value)
+        obj.showWeather(data);
         input.value = '';
     }
     
     search.addEventListener('click', searchLoc);
 }
 
-UI().setFixedIcons();
+function metricListener(obj) {
+    const btn = document.querySelector('.toggle-metric');
 
-displayWeather()
-    .then(searchListener)
+    btn.addEventListener('click', () => obj.setCelsius());
+}
+
+async function runApp() {
+    const widget = WeatherObj();
+    const weatherData = await widget.getWeather();
+
+    const newUI = UI();
+    newUI.setFixedIcons();
+    newUI.showWeather(weatherData);
+
+    metricListener(newUI)
+    searchListener(newUI);
+}
+
+runApp();
