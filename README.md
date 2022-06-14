@@ -7,7 +7,7 @@ Viewable at https://xiejon.github.io/weather-app/
 Daytime, clear skies
 ![Project photo](/src/readme-photos/photo1.png)
 Nighttime, cloudy
-![Project photo](/src/readme-photos/photo1.png)
+![Project photo](/src/readme-photos/photo2.png)
 
 ## Objectives 
 
