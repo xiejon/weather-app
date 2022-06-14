@@ -1,4 +1,5 @@
 import './styles.css';
+// Background images
 import DrizzleImg from './images/day/drizzle.jpg';
 import RainImg from './images/day/rain.jpg'
 import ThunderImg from './images/day/thunderstorm.jpg'
@@ -13,7 +14,17 @@ import NightCloudsImg from './images/night/night-clouds.jpg';
 import NightRainImg from './images/night/night-rain.jpg';
 import NightThunderImg from './images/night/night-thunderstorm.jpg';
 import NightSnowImg from './images/night/night-snow.jpg';
-
+// Weather icons
+import SearchSvg from './icons/search.svg'
+import ThermSvg from './icons/thermometer.svg'
+import WindSvg from './icons/wind.svg'
+import HumidSvg from './icons/droplet.svg'
+import SunSvg from './icons/sun.svg'
+import SnowSvg from './icons/cloud-snow.svg'
+import DrizzleSvg from './icons/cloud-drizzle.svg'
+import RainSvg from './icons/cloud-rain.svg'
+import LightningSvg from './icons/cloud-lightning.svg'
+import CloudSvg from './icons/cloud.svg'
 
 const WeatherObj = () => {
     let celsius = false;
@@ -94,27 +105,66 @@ const UI = () => {
 
             // test
             const weatherId = data.weather[0].id;
-            this.createBgImage();
-            this.setBackground(weatherId)
+            this.setImages(weatherId)
+
+            this.setSidebarIcons()
         }, 
-        createBgImage() {
-            if (document.querySelector('.background')) return;
+        setSidebarIcons() {
+            const box1 = document.querySelector('.extra .box:nth-child(1)')
+            const box2 = document.querySelector('.extra .box:nth-child(2)')
+            const box3 = document.querySelector('.extra .box:nth-child(3)')
+
+            const feelsLike = document.createElement('img')
+            const wind = document.createElement('img')
+            const humid = document.createElement('img')
+
+            feelsLike.src = ThermSvg;
+            wind.src = WindSvg;
+            humid.src = HumidSvg;
+
+            box1.append(feelsLike);
+            box2.append(wind);
+            box3.append(humid);
+        },
+        createDefaultBackground() {
             const container = document.querySelector('.container')
 
             const img = document.createElement('img');
             img.classList.add('background');
-            
+            img.src = NightClearskyImg
             container.append(img);
+        },
+        createDefaultSvg() {
+            const div = document.querySelector('.svg-div')
+
+            const svg = document.createElement('img')
+            svg.classList.add('main-svg');
+            svg.src = CloudSvg
+            div.append(svg);
         },
         setBgImage(link) {
             const img = document.querySelector('.background');
-            img.src = link
 
-            console.log(img)
+            if (link) {
+                img.setAttribute("src", link)
+            } else {
+                this.createDefaultBackground();
+            }
         },
-        setBackground(id) {
-            // Default background
-            this.setBgImage(NightClearskyImg)
+        setIcon(link) {
+            const svg = document.querySelector('.main-svg')
+            
+            if (link) {
+                svg.setAttribute("src", link)
+            } else {
+                this.createDefaultSvg();
+            }
+        },
+        setImages(id) {
+            // Default background & icon
+            this.createDefaultBackground();
+            this.createDefaultSvg();
+
             if (this.nightMode) {
                 if (id >= 200 && id <= 232) this.setBgImage(NightThunderImg);
                 if (id >= 300 && id <= 531) this.setBgImage(NightRainImg);
@@ -127,7 +177,10 @@ const UI = () => {
                 if (id >= 500 && id <= 531) this.setBgImage(RainImg);
                 if (id >= 600 && id <= 622) this.setBgImage(SnowImg);
                 if (id === 800) this.setBgImage(ClearskyImg);
-                if (id === 801) this.setBgImage(FewCloudsImg);
+                if (id === 801) {
+                    this.setBgImage(FewCloudsImg);
+                    this.setIcon(CloudSvg);
+                }
                 if (id === 802) this.setBgImage(ScatterCloudsImg);
                 if (id === 803) this.setBgImage(BrokenCloudsImg);
                 if (id === 804) this.setBgImage(OvercastImg);
@@ -162,4 +215,4 @@ async function getWeather(city) {
     console.log(weather)
 }
 
-getWeather('los angeles');
+getWeather('hamburg');

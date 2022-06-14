@@ -1,11 +1,12 @@
 .main, 
 .extra {
     width: 100px;
-    background-color: white;
+    border: 1px solid white;
 }
 
 .background {
     height: 100vh;
+    width: 100vw;
     position: absolute;
     top: 0;
     left: 0;
