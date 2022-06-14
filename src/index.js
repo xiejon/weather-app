@@ -37,10 +37,15 @@ const WeatherObj = () => {
       let longit;
 
       if (!city) {
-        // Default location
-        location = await WeatherObj().getUserLocation();
-        latit = location.coords.latitude;
-        longit = location.coords.longitude;
+        try {
+          location = await WeatherObj().getUserLocation();
+          latit = location.coords.latitude;
+          longit = location.coords.longitude;
+        } catch {
+          location = await WeatherObj().fetchLocation('london');
+          latit = location[0].lat;
+          longit = location[0].lon;
+        }
       } else {
         location = await WeatherObj().fetchLocation(city);
         latit = location[0].lat;
