@@ -101,7 +101,7 @@ const UI = () => {
       locDate.textContent = WeatherObj().convertDate(data).substring(0, 17);
       locTime.textContent = timestamp;
       mainTemp.textContent = `°${WeatherObj().convertTemp(data.main.temp)}`;
-      feelsLike.textContent = WeatherObj().convertTemp(data.main.feels_like);
+      feelsLike.textContent = `°${WeatherObj().convertTemp(data.main.feels_like)}`;
       wind.textContent = data.wind.speed;
       humid.textContent = data.main.humidity;
 

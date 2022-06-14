@@ -1,7 +1,62 @@
+@font-face {
+    font-family: Noto-Sans;
+    src: url(./Noto_Sans/NotoSans-Regular.ttf);
+    font-weight: 500;
+}
+@font-face {
+    font-family: Noto-Sans;
+    src: url(./Noto_Sans/NotoSans-Medium.ttf);
+    font-weight: 600;
+}
+@font-face {
+    font-family: Noto-Sans;
+    src: url(./Noto_Sans/NotoSans-Bold.ttf);
+    font-weight: 700;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Noto-Sans;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.extra {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.extra .box {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.box img {
+    grid-row: 1 / span 2;
+}
+
+.box h3 {
+    grid-column: 2;
+    font-size: 30px;
+    font-weight: 700;
+}
+.box p {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 40px;
+    font-weight: 600;
+}
+
 .main, 
 .extra {
-    width: 100px;
-    border: 1px solid white;
+    border: 1px solid yellow;
 }
 
 .background {
