@@ -74,7 +74,7 @@ const WeatherObj = () => {
     },
     async fetchLocation(city) {
       const raw = await fetch(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=bb9a4a8b3762bb47a3b7ff329d10b88f`,
+        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=bb9a4a8b3762bb47a3b7ff329d10b88f`,
         { mode: "cors" }
       );
       return raw.json();
